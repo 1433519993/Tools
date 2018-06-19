@@ -1,15 +1,6 @@
 package com.example.administrator.tools;
 
-import android.app.Service;
-import android.content.ComponentName;
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,14 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.IOException;
 
 import cn.jnvc.toolslib.SocketClient;
-import cn.jnvc.toolslib.SocketClientService;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final String TAG = "SocketClient";
     private Handler mMainHandler;//主线程Handler
     private Button play;
     private Button stop;
@@ -60,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 msg.what = 0x0;
                 mMainHandler.sendMessage(msg);
             }
+
+            @Override
+            public void getClientState(boolean state) {
+                Log.e(TAG, "--------->getClientState: "+state);
+            }
         });
 
     }
@@ -68,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn1:
                 SocketClient.Builder builder = new SocketClient.Builder(MainActivity.this);
-                builder.setAddress("10.2.0.216",1234);
+                builder.setAddress("192.168.137.2",1234);
                 SocketClient.onCreate();
                 break;
             case R.id.btn2:
