@@ -23,9 +23,8 @@ public class SocketClient {
     private static final String TAG = "SocketClient";
     private static Timer timer = new Timer();
     private static TimerTask task;
-    private static int newDate = 0; // 新时间
-    private static int oldDate = 0; // 旧时间
     private static Socket socket;
+    private static boolean SocketClientState = false; // 获取Socket连接状态，默认false
     private static OutputStream outputStream; // 输出
     private static InputStream inputStream; // 输入
     private static DataInputStream dataInputStream;
@@ -75,6 +74,7 @@ public class SocketClient {
     public interface CallBack {
         //这个回调用于获取服务端返回的数据
         void Receive(String data);
+        void getClientState(boolean state);
     }
 
     public static Socket onCreate() {
@@ -82,15 +82,19 @@ public class SocketClient {
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 socket = new Socket();
                 try {
                     socket.connect(new InetSocketAddress(ServerIP, ServerPort), 2000); // 超时连接
                     inputStream = socket.getInputStream();//输入流对象
 
-                    if (socket.isConnected()) { // 判断连接是(true)否(false)成功
+                    if (socket.isConnected() && !socket.isClosed()) { //第一个返回true第二个返回false时，socket处于连接状态
                         toastMsg("服务已连接");
+                        SocketClientState = true;
+                        callBack.getClientState(SocketClientState);
                         sendBeatData();
                     }
+
                     while (true) {
                         int len = inputStream.read(buf);
                         if (len == -1) {
@@ -237,19 +241,6 @@ public class SocketClient {
         toastMsg("服务已断开");
         isReConnect = false;
         releaseSocket();
-    }
-
-    /*获取当前系统时间*/
-    private static int getDate(){
-        int date = 0; // 单位秒
-
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY); //小时
-        int minute = calendar.get(Calendar.MINUTE); //分钟
-        int second = calendar.get(Calendar.SECOND); //秒
-        date = hour*60+minute*60+second;
-
-        return date;
     }
 
     /**
