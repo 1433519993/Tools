@@ -92,7 +92,7 @@ public class SocketClient {
                         toastMsg("服务已连接");
                         SocketClientState = true;
                         callBack.getClientState(SocketClientState);
-                        sendBeatData();
+                        //sendBeatData();
                     }
 
                     while (true) {
@@ -131,7 +131,7 @@ public class SocketClient {
                     try {
                         outputStream = socket.getOutputStream();
                         if (outputStream != null) {
-                            outputStream.write((order).getBytes("gb2312"));
+                            outputStream.write((order).getBytes());
                             outputStream.flush();
                         }
                     } catch (IOException e) {
