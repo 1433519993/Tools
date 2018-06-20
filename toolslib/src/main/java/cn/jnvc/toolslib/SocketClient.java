@@ -88,14 +88,8 @@ public class SocketClient {
                     socket.connect(new InetSocketAddress(ServerIP, ServerPort), 2000); // 超时连接
                     inputStream = socket.getInputStream();//输入流对象
 
-                    if (socket.isConnected() && !socket.isClosed()) { //第一个返回true第二个返回false时，socket处于连接状态
-                        toastMsg("服务已连接");
-                        SocketClientState = true;
-                        callBack.getClientState(SocketClientState);
-                        //sendBeatData();
-                    }
-
                     while (true) {
+                        //Log.e(TAG, "--------->获取值");
                         int len = inputStream.read(buf);
                         if (len == -1) {
                             toastMsg("网络异常，重连尝试");
@@ -104,6 +98,14 @@ public class SocketClient {
                             String Message = new String(buf, 0, len, "gb2312");
                             Log.e(TAG, "--------->Message: " + Message);
                             callBack.Receive(Message);
+                        }
+
+                        if (socket.isConnected() && !socket.isClosed()) { //第一个返回true第二个返回false时，socket处于连接状态
+                            //Log.e(TAG, "--------->获取连接状态");
+                            toastMsg("服务已连接");
+                            SocketClientState = true;
+                            callBack.getClientState(SocketClientState);
+                            //sendBeatData();
                         }
                     }
                 } catch (IOException e) {
@@ -166,7 +168,7 @@ public class SocketClient {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("ping", "01001");
 
-                        outputStream.write((jsonObject.toString()).getBytes("gb2312"));
+                        outputStream.write((jsonObject.toString()).getBytes());
                         outputStream.flush();
 
                     } catch (Exception e) {
