@@ -102,7 +102,7 @@ public class SocketClient {
 
                         if (socket.isConnected() && !socket.isClosed()) { //第一个返回true第二个返回false时，socket处于连接状态
                             //Log.e(TAG, "--------->获取连接状态");
-                            toastMsg("服务已连接");
+                            //toastMsg("服务已连接");
                             SocketClientState = true;
                             callBack.getClientState(SocketClientState);
                             //sendBeatData();
