@@ -132,9 +132,12 @@ public class SocketClient {
                 public void run() {
                     try {
                         outputStream = socket.getOutputStream();
-                        if (outputStream != null) {
+                        Log.e(TAG, "--------->发送信息的长度: "+order.length());
+                        if (outputStream != null && order.length()>0) {
                             outputStream.write((order).getBytes());
                             outputStream.flush();
+                        } else {
+                            toastMsg("不能发送空值！");
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
